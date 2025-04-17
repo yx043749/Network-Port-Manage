@@ -60,5 +60,11 @@ docker-compose down
 docker-compose restart
 ```
 
+## 界面效果如下
+![159a7b27-97a7-4b83-97e1-b977927d5291](https://github.com/user-attachments/assets/06216d46-36cf-4f2c-bcc9-0655f7aa10fc)
+
+
 ## 许可证
 本项目遵循 MIT 许可证。
+
+
