@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   port-manage:
-    image: port-manage  # 使用已构建的镜像
+    image: network-port-manage  # 构建的镜像名称
     container_name: port-manage-container
     network_mode: host  # 使用主机网络模式
     volumes:
