@@ -1,0 +1,6 @@
+flask
+psutil
+python-dotenv
+flask-limiter
+gunicorn
+cryptography

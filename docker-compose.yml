@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  port-manage:
+    image: port-manage  # 使用已构建的镜像
+    container_name: port-manage-container
+    network_mode: host  # 使用主机网络模式
+    volumes:
+      - /proc:/host_proc:ro  # 挂载宿主机的 /proc 文件系统为只读
+    environment:
+      - ALLOWED_SUBNET=192.168.1.0/24  # 直接定义环境变量
+      - USERNAME=admin
+      - PASSWORD=password
+      - DEFAULT_RATE_LIMIT=100 per hour
+      - API_RATE_LIMIT=10 per minute
+    restart: always  # 容器崩溃时自动重启

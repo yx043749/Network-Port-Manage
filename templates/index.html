@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>端口管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">端口管理</h1>
+        <p class="text-center">显示当前系统中应用和使用的端口关系</p>
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>端口</th>
+                    <th>进程 ID</th>
+                    <th>进程名称</th>
+                </tr>
+            </thead>
+            <tbody id="port-table-body">
+                <!-- 数据将通过 JavaScript 动态填充 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchPorts() {
+            try {
+                const response = await fetch('/api/ports'); // 不再需要 api_key
+                if (!response.ok) {
+                    throw new Error('无法获取端口数据');
+                }
+                const ports = await response.json();
+                const tableBody = document.getElementById('port-table-body');
+                tableBody.innerHTML = ''; // 清空表格内容
+                ports.forEach(port => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${port.port}</td>
+                        <td>${port.pid}</td>
+                        <td>${port.process}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error(error);
+                alert('加载端口数据时出错，请稍后重试。');
+            }
+        }
+
+        // 页面加载时获取端口数据
+        window.onload = fetchPorts;
+    </script>
+</body>
+</html>
