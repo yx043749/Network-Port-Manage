@@ -11,7 +11,7 @@ Network-Port-Manage 是一个基于 Flask 的 Web 应用程序，用于监控主
 
 ## 环境变量
 以下环境变量在 `docker-compose.yml` 中定义：
-- `ALLOWED_SUBNET`：允许访问的子网（默认：`192.168.1.0/24`）。
+- `ALLOWED_SUBNET`：允许访问的子网（举例：`192.168.1.0/24`, 默认所有网段可以访问）。
 - `USERNAME`：登录用户名（默认：`admin`）。
 - `PASSWORD`：登录密码（默认：`password`）。
 - `DEFAULT_RATE_LIMIT`：全局速率限制（默认：`100 per hour`）。
@@ -63,8 +63,7 @@ docker-compose restart
 ## 界面效果如下
 ![159a7b27-97a7-4b83-97e1-b977927d5291](https://github.com/user-attachments/assets/06216d46-36cf-4f2c-bcc9-0655f7aa10fc)
 
-
 ## 许可证
-本项目遵循 MIT 许可证。
+本项目遵循 [GNU Affero General Public License v3 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html) 许可证。
 
 

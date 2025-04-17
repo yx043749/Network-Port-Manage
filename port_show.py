@@ -23,19 +23,23 @@ limiter = Limiter(
     default_limits=[DEFAULT_RATE_LIMIT]
 )
 
-# 从环境变量读取允许的网段、用户名和密码
-ALLOWED_SUBNET = ipaddress.ip_network(os.getenv('ALLOWED_SUBNET', '192.168.1.0/24'))
+# 从环境变量读取允许的网段，默认允许所有地址访问
+ALLOWED_SUBNET = os.getenv('ALLOWED_SUBNET', None)
+if ALLOWED_SUBNET:
+    ALLOWED_SUBNET = ipaddress.ip_network(ALLOWED_SUBNET)
+
 USERNAME = os.getenv('USERNAME', 'admin')
-PASSWORD = os.getenv('PASSWORD', 'securepassword')
+PASSWORD = os.getenv('PASSWORD', 'password')
 
 # 设置 psutil 使用宿主机的 /proc 文件系统
 psutil.PROCFS_PATH = "/host_proc"
 
 @app.before_request
 def limit_remote_addr():
-    client_ip = ipaddress.ip_address(request.remote_addr)
-    if client_ip not in ALLOWED_SUBNET:
-        abort(403)  # 禁止访问
+    if ALLOWED_SUBNET:  # 如果设置了 ALLOWED_SUBNET，则限制访问
+        client_ip = ipaddress.ip_address(request.remote_addr)
+        if client_ip not in ALLOWED_SUBNET:
+            abort(403)  # 禁止访问
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
