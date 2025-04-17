@@ -47,7 +47,7 @@ https://<主机IP>:7899
 
 ### 查看容器日志
 ```bash
-docker logs -f port-manage-container
+docker logs -f network-port-manage
 ```
 
 ### 停止服务
