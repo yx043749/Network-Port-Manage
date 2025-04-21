@@ -19,19 +19,26 @@ Network-Port-Manage 是一个基于 Flask 的 Web 应用程序，用于监控主
 
 ## 部署步骤
 
-### 1. 构建 Docker 镜像
+### 1. 克隆项目
+运行以下命令克隆项目到本地：
+```bash
+git clone https://github.com/your-repo/network-port-manage.git
+cd network-port-manage
+```
+
+### 2. 构建 Docker 镜像
 在项目根目录运行以下命令：
 ```bash
 docker build -t network-port-manage .
 ```
 
-### 2. 启动服务
+### 3. 启动服务
 通过 Docker Compose 启动服务：
 ```bash
 docker-compose up -d
 ```
 
-### 3. 访问应用
+### 4. 访问应用
 在浏览器中访问：
 ```
 https://<主机IP>:7899
