@@ -22,7 +22,7 @@ Network-Port-Manage 是一个基于 Flask 的 Web 应用程序，用于监控主
 ### 1. 克隆项目
 运行以下命令克隆项目到本地：
 ```bash
-git clone https://github.com/your-repo/network-port-manage.git
+git clone https://github.com/yx043749/network-port-manage.git
 cd network-port-manage
 ```
 
