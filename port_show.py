@@ -59,22 +59,35 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/api/ports')
-@limiter.limit(API_RATE_LIMIT)  # 使用环境变量配置的速率限制
+@limiter.limit(API_RATE_LIMIT)
 def get_ports():
     if not session.get('logged_in'):
-        abort(401)  # 未授权
+        abort(401)
 
     ports = []
-    for conn in psutil.net_connections(kind='inet'):
-        if conn.laddr and conn.pid:
-            ports.append({
-                'port': conn.laddr.port,
-                'pid': conn.pid,
-                'process': psutil.Process(conn.pid).name()
-            })
+    try:
+        # 检查 /host_proc 是否可用
+        if not os.path.exists("/host_proc/net/tcp"):
+            psutil.PROCFS_PATH = "/proc"  # 回退到默认路径
 
-    # 按端口号排序
-    ports = sorted(ports, key=lambda x: x['port'])
+        # 获取所有连接
+        for conn in psutil.net_connections(kind='inet') + psutil.net_connections(kind='inet6'):
+            if conn.laddr:
+                try:
+                    process_name = psutil.Process(conn.pid).name() if conn.pid else "kernel"
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    process_name = "unknown"
+                ports.append({
+                    'protocol': 'TCP' if conn.type == psutil.socket.SOCK_STREAM else 'UDP',
+                    'port': conn.laddr.port,
+                    'pid': conn.pid,
+                    'process': process_name,
+                    'status': conn.status
+                })
+        ports = sorted(ports, key=lambda x: x['port'])
+    except Exception as e:
+        app.logger.error(f"Failed to get ports: {str(e)}")
+        return jsonify({"error": "加载端口数据时出错，请稍后重试"}), 500
 
     return jsonify(ports)
 
