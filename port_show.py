@@ -77,14 +77,25 @@ def get_ports():
                     process_name = psutil.Process(conn.pid).name() if conn.pid else "kernel"
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     process_name = "unknown"
-                ports.append({
+                
+                port_data = {
                     'protocol': 'TCP' if conn.type == psutil.socket.SOCK_STREAM else 'UDP',
                     'port': conn.laddr.port,
                     'pid': conn.pid,
                     'process': process_name,
                     'status': conn.status
-                })
-        ports = sorted(ports, key=lambda x: x['port'])
+                }
+                ports.append(port_data)
+
+        # 去重：按端口号 + 协议（TCP/UDP）去重
+        unique_ports = {}
+        for port_info in ports:
+            key = (port_info['port'], port_info['protocol'])  # 用 (端口, 协议) 作为唯一键
+            if key not in unique_ports:
+                unique_ports[key] = port_info
+
+        # 转换为列表并按端口号排序
+        ports = sorted(unique_ports.values(), key=lambda x: x['port'])
     except Exception as e:
         app.logger.error(f"Failed to get ports: {str(e)}")
         return jsonify({"error": "加载端口数据时出错，请稍后重试"}), 500
